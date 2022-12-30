@@ -11,6 +11,13 @@ div {
   border-bottom: 1px solid grey;
 }
 
+.Modal{
+  margin-top: 20px;
+  padding: 20px;
+  background: #eee;
+  text-align: left;
+}
+
 .black-nav{
   display: flex;
   background: black;
@@ -18,6 +25,8 @@ div {
   color: white;
   padding-left: 20px;
 }
+
+
 
 .App-logo {
   height: 40vmin;
