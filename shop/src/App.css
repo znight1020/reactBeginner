@@ -2,9 +2,25 @@
   text-align: center;
 }
 
+.Navlink{
+  text-decoration: none;
+  padding-right: 10px;
+  color: azure;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.test {
+  object-fit: cover;
+}
+
+.main-bg {
+  height: 300px;
+  background-image: url('./img/coding.jpg'); /*이미지 주소 넣고*/ 
+  background-size: cover; /*이미지 사이즈 조정해주고*/
+  background-position: center; /*이미지 정렬 해주고*/
 }
 
 @media (prefers-reduced-motion: no-preference) {
