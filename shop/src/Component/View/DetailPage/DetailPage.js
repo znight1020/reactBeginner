@@ -31,7 +31,6 @@ import styled from "styled-components";
 // }
 
 function DetailPage(props) {
-  let [count, setCount] = useState(0);
   let [visible, setVisible] = useState(true);
   let [inputValue, setInputValue] = useState(123);
 
@@ -51,25 +50,13 @@ function DetailPage(props) {
   // [count] 이런식으로 넣어주면 count 라는 state가 변할 때만 실행됨
   // []만 있다면 mount 될 때만 실행, update때는 X
 
-  useEffect(() => {
-    let a = inputValue;
-    isNaN(a) == false ? void 0 : alert("그러지마세요");
-  }, [inputValue]);
+  // useEffect(() => {
+  //   let a = inputValue;
+  //   isNaN(a) == false ? void 0 : alert("그러지마세요");
+  // }, [inputValue]);
 
   return (
     <div className="container">
-      {count}
-      {/* <Box>
-        <YellowBtn bg="blue">버튼</YellowBtn>
-      </Box> */}
-      <button
-        onClick={() => {
-          setCount(count + 1);
-        }}
-      >
-        버튼
-      </button>
-
       <div className="row">
         <div className="col-md-6">
           <img
@@ -87,20 +74,16 @@ function DetailPage(props) {
         </div>
 
         <div style={{ paddingLeft: "180px" }}>
-          <input
+          {/* <input
             onChange={(e) => {
               setInputValue(e.target.value);
             }}
             style={{ float: "left" }}
-          ></input>
+          ></input> */}
         </div>
       </div>
     </div>
   );
-}
-
-function TimeOutPage() {
-  return <div>시간 초과 ㅠㅠ</div>;
 }
 
 export default DetailPage;

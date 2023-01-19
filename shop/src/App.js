@@ -7,8 +7,9 @@ import { useState } from "react";
 import coding from "./img/coding.jpg";
 import data from "./data.js";
 import DetailPage from "./Component/View/DetailPage/DetailPage";
+import axios from "axios";
 
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 
 /** 동영상
  function Intro() {
@@ -22,6 +23,8 @@ import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 
 function App() {
   let [shoes, setShoes] = useState(data);
+  let [clickCount, setClickCount] = useState(2);
+  let [loading, setLoading] = useState(false);
 
   let navigate = useNavigate();
 
@@ -48,7 +51,6 @@ function App() {
           </Nav>
         </Container>
       </Navbar>
-
       <Routes>
         <Route
           path="/"
@@ -63,7 +65,7 @@ function App() {
                 <Row>
                   {shoes.map((a, i) => {
                     return (
-                      <Col sm key={i}>
+                      <Col sm={4} key={i}>
                         <Card
                           shoes={shoes[i]}
                           img={
@@ -78,6 +80,34 @@ function App() {
                   })}
                 </Row>
               </Container>
+
+              <button
+                onClick={() => {
+                  setLoading(true);
+                  clickCount <= 3 === true
+                    ? axios
+                        .get(
+                          `https://codingapple1.github.io/shop/data${clickCount}.json`
+                        )
+                        .then((result) => {
+                          let copy = [...shoes];
+                          copy.push(...result.data);
+                          setShoes(copy);
+                          setClickCount(++clickCount);
+                          /*let copy = [...shoes, ...result.data];
+              setShoes(copy)*/
+                        })
+                    : alert("더 이상 상품이 없습니다");
+
+                  // axios.post("/asdasdasd", { name: "kim" });
+
+                  // Promise.all([axios.get("/url1"), axios.get("/url2")]).then(() => {}); // 동시에 ajax 요청 여러개하면
+
+                  setLoading(false);
+                }}
+              >
+                상품 더보기
+              </button>
             </>
           }
         />
@@ -93,12 +123,25 @@ function App() {
           <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
         </Route>
       </Routes>
+
+      {loading == true ? <Loading /> : void 0}
     </div>
   );
 }
 
 export default App;
 
+function Loading() {
+  return (
+    <div>
+      <img
+        src="https://codingapple1.github.io/shop/shoes1.jpg"
+        width="80%"
+        height="300px"
+      />
+    </div>
+  );
+}
 function Card(props) {
   return (
     <div>
