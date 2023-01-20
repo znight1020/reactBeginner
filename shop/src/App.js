@@ -3,13 +3,13 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Container, Nav, Row, Col } from "react-bootstrap";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import coding from "./img/coding.jpg";
 import data from "./data.js";
 import DetailPage from "./Component/View/DetailPage/DetailPage";
 import axios from "axios";
 
-import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
+import { Link, Routes, Route, useNavigate, Outlet } from "react-router-dom";
 
 /** 동영상
  function Intro() {
@@ -21,10 +21,14 @@ import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 } 
  */
 
+export let Context1 = createContext(); // context를 만들어줌 <- State 보관함
+
 function App() {
   let [shoes, setShoes] = useState(data);
   let [clickCount, setClickCount] = useState(2);
   let [loading, setLoading] = useState(false);
+
+  let [재고] = useState([10, 11, 12]);
 
   let navigate = useNavigate();
 
@@ -32,7 +36,7 @@ function App() {
     <div className="App">
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">ReactShop</Navbar.Brand>
+          <Navbar.Brand href="/">ReactShop</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link
               onClick={() => {
@@ -111,7 +115,15 @@ function App() {
             </>
           }
         />
-        <Route path="/detail/:id" element={<DetailPage shoes={shoes} />} />
+        <Route
+          path="/detail/:id"
+          element={
+            <Context1.Provider value={{ 재고, shoes }}>
+              {/*Context로 원하는 컴포넌트 감싸기, Provider 추가해서 value 속성 추가하면 Detail의 모든 자식 컴포넌트는 shoes, 재고 State를 사용할 수 있음*/}
+              <DetailPage shoes={shoes} />
+            </Context1.Provider>
+          }
+        />
 
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버임</div>} />
@@ -145,9 +157,15 @@ function Loading() {
 function Card(props) {
   return (
     <div>
-      <img src={props.img} width="80%" alt="shoe" />
-      <h4>{props.shoes.title}</h4>
-      <p>{props.shoes.price}</p>
+      <Link
+        className="Navlink"
+        to={`/detail/${props.i}`}
+        style={{ color: "black" }}
+      >
+        <img src={props.img} width="80%" alt="shoe" />
+        <h4>{props.shoes.title}</h4>
+        <p>{props.shoes.price}</p>
+      </Link>
     </div>
   );
 }

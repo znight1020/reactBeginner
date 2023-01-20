@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
+import { Context1 } from "../../../App";
 import styled from "styled-components";
-
 // let YellowBtn = styled.button`
 //   background: ${(props) => props.bg};
 //   color: ${(props) => (props.bg == "blue" ? "white" : "black")};
@@ -31,20 +32,25 @@ import styled from "styled-components";
 // }
 
 function DetailPage(props) {
+  let { 재고, shoes } = useContext(Context1);
+
   let [visible, setVisible] = useState(true);
   let [inputValue, setInputValue] = useState(123);
-
+  const [tabIndex, setTabIndex] = useState(0);
+  const [fade2, setFade2] = useState("");
   let { id } = useParams(); // 유저가 id 자리에 적은거 가져와줌
 
   useEffect(() => {
     let a = setTimeout(() => {
       {
+        setFade2("end");
         setVisible(false);
       }
-      return () => {
-        clearTimeout(a);
-      };
-    }, 2000);
+    }, 100);
+    return () => {
+      clearTimeout(a);
+      setFade2("");
+    };
   }, []);
   // [] 요거가 없다면 mount, update 때마다 useEffect가 실행
   // [count] 이런식으로 넣어주면 count 라는 state가 변할 때만 실행됨
@@ -56,7 +62,7 @@ function DetailPage(props) {
   // }, [inputValue]);
 
   return (
-    <div className="container">
+    <div className={"container start " + fade2}>
       <div className="row">
         <div className="col-md-6">
           <img
@@ -81,7 +87,59 @@ function DetailPage(props) {
             style={{ float: "left" }}
           ></input> */}
         </div>
+
+        <Nav variant="tabs" defaultActiveKey="link0">
+          <Nav.Item>
+            <Nav.Link
+              onClick={() => {
+                setTabIndex(0);
+              }}
+              eventKey="link0"
+            >
+              버튼0
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              onClick={() => {
+                setTabIndex(1);
+              }}
+              eventKey="link1"
+            >
+              버튼1
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              onClick={() => {
+                setTabIndex(2);
+              }}
+              eventKey="link2"
+            >
+              버튼2
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <Tab tab={tabIndex} />
       </div>
+    </div>
+  );
+}
+
+function Tab({ tab }) {
+  let [fade, setFade] = useState("");
+  useEffect(() => {
+    let a = setTimeout(() => {
+      setFade("end");
+    }, 100);
+    return () => {
+      clearTimeout(a);
+      setFade("");
+    };
+  }, [tab]);
+  return (
+    <div className={`start ${fade}`}>
+      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
     </div>
   );
 }
