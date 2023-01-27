@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import { Context1 } from "../../../App";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { addCart } from "../../../_stores/stores";
 // let YellowBtn = styled.button`
 //   background: ${(props) => props.bg};
 //   color: ${(props) => (props.bg == "blue" ? "white" : "black")};
@@ -40,11 +42,29 @@ function DetailPage(props) {
   const [fade2, setFade2] = useState("");
   let { id } = useParams(); // 유저가 id 자리에 적은거 가져와줌
 
+  let dispatch = useDispatch();
+
   useEffect(() => {
+    let getLocalData = localStorage.getItem("watched");
+    getLocalData = JSON.parse(getLocalData);
+    /*방법 1*/
+    let flag = getLocalData.find((a) => {
+      return a === props.shoes[id].id;
+    });
+    if (flag != undefined) {
+    } else {
+      getLocalData.push(props.shoes[id].id);
+    }
+
+    /*방법 2*/
+    // getLocalData = new Set(getLocalData);
+    // getLocalData = Array.from(getLocalData);
+
+    localStorage.setItem("watched", JSON.stringify(getLocalData));
+
     let a = setTimeout(() => {
       {
         setFade2("end");
-        setVisible(false);
       }
     }, 100);
     return () => {
@@ -76,7 +96,20 @@ function DetailPage(props) {
           <h4 className="pt-5">{props.shoes[id].title}</h4>
           <p>{props.shoes[id].content}</p>
           <p>{props.shoes[id].price}원</p>
-          <button className="btn btn-danger">주문하기</button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              dispatch(
+                addCart({
+                  id: props.shoes[id].id,
+                  name: props.shoes[id].title,
+                  count: 1,
+                })
+              );
+            }}
+          >
+            주문하기
+          </button>
         </div>
 
         <div style={{ paddingLeft: "180px" }}>

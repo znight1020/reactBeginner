@@ -1,13 +1,14 @@
 /* eslint-disable */
-
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Container, Nav, Row, Col } from "react-bootstrap";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import coding from "./img/coding.jpg";
-import data from "./data.js";
-import DetailPage from "./Component/View/DetailPage/DetailPage";
 import axios from "axios";
+
+import DetailPage from "./Component/View/DetailPage/DetailPage";
+import CartPage from "./Component/View/CartPage/CartPage";
+import data from "./data.js";
 
 import { Link, Routes, Route, useNavigate, Outlet } from "react-router-dom";
 
@@ -24,11 +25,27 @@ import { Link, Routes, Route, useNavigate, Outlet } from "react-router-dom";
 export let Context1 = createContext(); // context를 만들어줌 <- State 보관함
 
 function App() {
+  useEffect(() => {
+    if (localStorage.getItem("watched") != undefined) {
+    } else {
+      localStorage.setItem("watched", JSON.stringify([]));
+    }
+  }, []);
+
+  // let obj = { name: "kim" };
+  // localStorage.setItem("data", JSON.stringify(obj)); // JSON 변환
+  // let getObj = localStorage.getItem("data");
+  // console.log(JSON.parse(getObj)); // JSON -> Object 변환
+
   let [shoes, setShoes] = useState(data);
   let [clickCount, setClickCount] = useState(2);
   let [loading, setLoading] = useState(false);
 
   let [재고] = useState([10, 11, 12]);
+
+  let [recentProduct, setRecentProduct] = useState(
+    JSON.parse(localStorage.getItem("watched"))
+  );
 
   let navigate = useNavigate();
 
@@ -47,10 +64,10 @@ function App() {
             </Nav.Link>
             <Nav.Link
               onClick={() => {
-                navigate("/detail");
+                navigate("/cart");
               }}
             >
-              Detail
+              Cart
             </Nav.Link>
           </Nav>
         </Container>
@@ -112,6 +129,23 @@ function App() {
               >
                 상품 더보기
               </button>
+
+              <h4
+                style={{
+                  paddingTop: "100px",
+                  paddingLeft: "20px",
+                  textAlign: "left",
+                }}
+              >
+                최근 본 상품 :
+                {recentProduct.map((a, i) => {
+                  return (
+                    <Col sm={4} style={{ paddingLeft: "50px" }} key={i}>
+                      {shoes[recentProduct[i]].title}
+                    </Col>
+                  );
+                })}
+              </h4>
             </>
           }
         />
@@ -134,8 +168,9 @@ function App() {
           <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
           <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
         </Route>
-      </Routes>
 
+        <Route path="/cart" element={<CartPage />}></Route>
+      </Routes>
       {loading == true ? <Loading /> : void 0}
     </div>
   );
